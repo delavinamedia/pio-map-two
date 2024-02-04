@@ -1,4 +1,4 @@
-$(window).on('load', function() {
+$(window).on('load', function () {
   var documentSettings = {};
   var group2color = {};
 
@@ -76,7 +76,7 @@ $(window).on('load', function() {
         groups.push(group);
 
         // Add color to the crosswalk
-        group2color[ group ] = points[i]['Marker Icon'].indexOf('.') > 0
+        group2color[group] = points[i]['Marker Icon'].indexOf('.') > 0
           ? points[i]['Marker Icon']
           : points[i]['Marker Color'];
       }
@@ -126,10 +126,12 @@ $(window).on('load', function() {
         );
 
       if (point.Latitude !== '' && point.Longitude !== '') {
-        var marker = L.marker([point.Latitude, point.Longitude], {icon: icon})
-          .bindPopup("<b>" + point['Name'] + '</b><br>' +
-          (point['Image'] ? ('<img src="' + point['Image'] + '"><br>') : '') +
-          point['Description']);
+        var marker = L.marker([point.Latitude, point.Longitude], { icon: icon })
+          .bindPopup(
+            (point['Image'] ? ('<img src="' + point['Image'] + '"><br>') : '') +
+            "<b>" + point['Name'] + '</b><br>' +
+            point['Description']
+          );
 
         if (layers !== undefined && layers.length !== 1) {
           marker.addTo(layers[point.Group]);
@@ -146,8 +148,8 @@ $(window).on('load', function() {
     if (layers === undefined || layers.length === 0) {
       map.addLayer(
         clusters
-        ? L.markerClusterGroup().addLayer(group).addTo(map)
-        : group
+          ? L.markerClusterGroup().addLayer(group).addTo(map)
+          : group
       );
     } else {
       if (clusters) {
@@ -187,11 +189,11 @@ $(window).on('load', function() {
 
     // Display table with active points if specified
     var columns = getSetting('_tableColumns').split(',')
-                  .map(Function.prototype.call, String.prototype.trim);
+      .map(Function.prototype.call, String.prototype.trim);
 
     if (displayTable && columns.length > 1) {
       tableHeight = trySetting('_tableHeight', 40);
-      if (tableHeight < 10 || tableHeight > 90) {tableHeight = 40;}
+      if (tableHeight < 10 || tableHeight > 90) { tableHeight = 40; }
       $('#map').css('height', (100 - tableHeight) + 'vh');
       map.invalidateSize();
 
@@ -214,7 +216,7 @@ $(window).on('load', function() {
         var pointsVisible = [];
         for (i in points) {
           if (map.hasLayer(layers[points[i].Group]) &&
-              map.getBounds().contains(L.latLng(points[i].Latitude, points[i].Longitude))) {
+            map.getBounds().contains(L.latLng(points[i].Latitude, points[i].Longitude))) {
             pointsVisible.push(points[i]);
           }
         }
@@ -243,7 +245,7 @@ $(window).on('load', function() {
       function generateColumnsArray() {
         var c = [];
         for (i in columns) {
-          c.push({title: columns[i]});
+          c.push({ title: columns[i] });
         }
         return c;
       }
@@ -288,17 +290,17 @@ $(window).on('load', function() {
       allPopupProperties.push(popupProperties);
 
       // Load geojson
-      $.getJSON(getPolygonSetting(p, '_polygonsGeojsonURL').trim(), function(data) {
-          geoJsonLayer = L.geoJson(data, {
-            onEachFeature: onEachFeature,
-            pointToLayer: function(feature, latlng) {
-              return L.circleMarker(latlng, {
-                className: 'geojson-point-marker'
-              });
-            }
-          });
-          allGeojsons.push(geoJsonLayer);
-          loadAllGeojsons(p+1);
+      $.getJSON(getPolygonSetting(p, '_polygonsGeojsonURL').trim(), function (data) {
+        geoJsonLayer = L.geoJson(data, {
+          onEachFeature: onEachFeature,
+          pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, {
+              className: 'geojson-point-marker'
+            });
+          }
+        });
+        allGeojsons.push(geoJsonLayer);
+        loadAllGeojsons(p + 1);
       });
     } else {
       processAllPolygons();
@@ -370,9 +372,9 @@ $(window).on('load', function() {
       allPolygonLayers.push(polygonLayers);
 
       var legendPos = tryPolygonSetting(p, '_polygonsLegendPosition', 'off');
-      polygonsLegend = L.control({position: (legendPos == 'off') ? 'topleft' : legendPos});
+      polygonsLegend = L.control({ position: (legendPos == 'off') ? 'topleft' : legendPos });
 
-      polygonsLegend.onAdd = function(map) {
+      polygonsLegend.onAdd = function (map) {
         var content = '<h6 class="pointer">' + getPolygonSetting(p, '_polygonsLegendTitle') + '</h6>';
         content += '<form>';
 
@@ -381,7 +383,7 @@ $(window).on('load', function() {
             ? polygonLayers[i][1].trim()
             : polygonLayers[i][0].trim();
 
-            layer = (layer == '') ? 'On' : layer;
+          layer = (layer == '') ? 'On' : layer;
 
           content += '<label><input type="radio" name="prop" value="' + p + ';' + i + '"> ';
           content += layer + '</label><br>';
@@ -411,7 +413,7 @@ $(window).on('load', function() {
     }
 
     // This is triggered when user changes the radio button
-    $('.ladder input:radio[name="prop"]').change(function() {
+    $('.ladder input:radio[name="prop"]').change(function () {
       polygon = parseInt($(this).val().split(';')[0]);
       layer = parseInt($(this).val().split(';')[1]);
 
@@ -460,7 +462,7 @@ $(window).on('load', function() {
     // Can't use 'hide' because it is later toggled
     if (allDivisors[p][z] == '') {
       $('.polygons-legend' + p).find('.polygons-legend-scale').css(
-        {'margin': '0px', 'padding': '0px', 'border': '0px solid'}
+        { 'margin': '0px', 'padding': '0px', 'border': '0px solid' }
       );
       return;
     }
@@ -473,7 +475,7 @@ $(window).on('load', function() {
     for (var i = 0; i < allDivisors[p][z].length; i++) {
       var isNum = allIsNumerical[p][z];
       var from = allDivisors[p][z][i];
-      var to = allDivisors[p][z][i+1];
+      var to = allDivisors[p][z][i + 1];
 
       var color = getColor(from);
       from = from ? comma(from) : from;
@@ -537,7 +539,7 @@ $(window).on('load', function() {
       }
     }
 
-    if (!col[i]) {i = 0}
+    if (!col[i]) { i = 0 }
     return col[i];
   }
 
@@ -549,7 +551,7 @@ $(window).on('load', function() {
     // Do not bind popups if 1. no popup properties specified and 2. display
     // images is turned off.
     if (getPolygonSetting(polygon, '_popupProp') == ''
-     && getPolygonSetting(polygon, '_polygonDisplayImages') == 'off') return;
+      && getPolygonSetting(polygon, '_polygonDisplayImages') == 'off') return;
 
     var info = '';
     props = allPopupProperties[polygon];
@@ -573,7 +575,7 @@ $(window).on('load', function() {
 
     layer.bindPopup(info);
 
-    
+
     // Add polygon label if needed
     if (!allTextLabels[polygon]) { allTextLabels.push([]) }
 
@@ -593,7 +595,7 @@ $(window).on('load', function() {
    * redrawn and thus get on top of polygons
    */
   function doubleClickPolylines() {
-    $('#polylines-legend form label input').each(function(i) {
+    $('#polylines-legend form label input').each(function (i) {
       $(this).click().click();
     });
   }
@@ -640,7 +642,7 @@ $(window).on('load', function() {
       var geocoder = L.Control.geocoder({
         expand: 'click',
         position: getSetting('_mapSearch'),
-        
+
         geocoder: L.Control.Geocoder.nominatim({
           geocodingQueryParams: {
             viewbox: '',  // by default, viewbox is empty
@@ -652,9 +654,9 @@ $(window).on('load', function() {
       function updateGeocoderBounds() {
         var bounds = map.getBounds();
         geocoder.options.geocoder.options.geocodingQueryParams.viewbox = [
-            bounds._southWest.lng, bounds._southWest.lat,
-            bounds._northEast.lng, bounds._northEast.lat
-          ].join(',');
+          bounds._southWest.lng, bounds._southWest.lat,
+          bounds._northEast.lng, bounds._northEast.lat
+        ].join(',');
       }
 
       // Update search viewbox coordinates every time the map moves
@@ -672,10 +674,10 @@ $(window).on('load', function() {
 
     // Add zoom control
     if (getSetting('_mapZoom') !== 'off') {
-      L.control.zoom({position: getSetting('_mapZoom')}).addTo(map);
+      L.control.zoom({ position: getSetting('_mapZoom') }).addTo(map);
     }
 
-    map.on('zoomend', function() {
+    map.on('zoomend', function () {
       togglePolygonLabels();
     });
 
@@ -685,13 +687,13 @@ $(window).on('load', function() {
     changeAttribution();
 
     // Append icons to categories in markers legend
-    $('#points-legend label span').each(function(i) {
+    $('#points-legend label span').each(function (i) {
       var g = $(this).text().trim();
-      var legendIcon = (group2color[ g ].indexOf('.') > 0)
-        ? '<img src="' + group2color[ g ] + '" class="markers-legend-icon">'
+      var legendIcon = (group2color[g].indexOf('.') > 0)
+        ? '<img src="' + group2color[g] + '" class="markers-legend-icon">'
         : '&nbsp;<i class="fas fa-map-marker" style="color: '
-          + group2color[ g ]
-          + '"></i>';
+        + group2color[g]
+        + '"></i>';
       $(this).prepend(legendIcon);
     });
 
@@ -710,7 +712,7 @@ $(window).on('load', function() {
           }
         }
 
-        $('.ladder h6').click(function() {
+        $('.ladder h6').click(function () {
           if ($(this).hasClass('minimize')) {
             $('.ladder h6').addClass('minimize');
             $('.legend-arrow i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
@@ -745,13 +747,13 @@ $(window).on('load', function() {
     // Add Google Analytics if the ID exists
     var ga = getSetting('_googleAnalytics');
     console.log(ga)
-    if ( ga && ga.length >= 10 ) {
+    if (ga && ga.length >= 10) {
       var gaScript = document.createElement('script');
-      gaScript.setAttribute('src','https://www.googletagmanager.com/gtag/js?id=' + ga);
+      gaScript.setAttribute('src', 'https://www.googletagmanager.com/gtag/js?id=' + ga);
       document.head.appendChild(gaScript);
-  
+
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
+      function gtag() { dataLayer.push(arguments); }
       gtag('js', new Date());
       gtag('config', ga);
     }
@@ -774,7 +776,7 @@ $(window).on('load', function() {
         $('.div-center').append('<div class="map-title leaflet-bar leaflet-control leaflet-control-custom">' + title + subtitle + '</div>');
       }
 
-      $('.map-title h3').click(function() { location.reload(); });
+      $('.map-title h3').click(function () { location.reload(); });
     }
   }
 
@@ -795,8 +797,8 @@ $(window).on('load', function() {
     });
 
     for (i = 0; i < p.length; i++) {
-      $.getJSON(p[i]['GeoJSON URL'], function(index) {
-        return function(data) {
+      $.getJSON(p[i]['GeoJSON URL'], function (index) {
+        return function (data) {
           latlng = [];
 
           for (l in data['features']) {
@@ -869,14 +871,14 @@ $(window).on('load', function() {
       $('body').append('<div id="mobile-intro-popup"><p>' + info +
         '</p><div id="mobile-intro-popup-close"><i class="fas fa-times"></i></div></div>');
 
-      $('#mobile-intro-popup-close').click(function() {
+      $('#mobile-intro-popup-close').click(function () {
         $("#mobile-intro-popup").hide();
       });
       return;
     }
 
     /* And this is a standard popup for bigger screens */
-    L.popup({className: 'intro-popup'})
+    L.popup({ className: 'intro-popup' })
       .setLatLng(coordinates) // this needs to change
       .setContent(info)
       .openOn(map);
@@ -928,7 +930,7 @@ $(window).on('load', function() {
   function addBaseMap() {
 
     var basemap = trySetting('_tileProvider', 'CartoDB.Positron');
-    
+
     L.tileLayer.provider(basemap, {
       maxZoom: 18,
 
@@ -985,114 +987,114 @@ $(window).on('load', function() {
   /**
    * Triggers the load of the spreadsheet and map creation
    */
-   var mapData;
+  var mapData;
 
-   $.ajax({
-       url:'./csv/Options.csv',
-       type:'HEAD',
-       error: function() {
-         // Options.csv does not exist in the root level, so use Tabletop to fetch data from
-         // the Google sheet
+  $.ajax({
+    url: './csv/Options.csv',
+    type: 'HEAD',
+    error: function () {
+      // Options.csv does not exist in the root level, so use Tabletop to fetch data from
+      // the Google sheet
 
-         if (typeof googleApiKey !== 'undefined' && googleApiKey) {
+      if (typeof googleApiKey !== 'undefined' && googleApiKey) {
 
-          var parse = function(res) {
-            return Papa.parse(Papa.unparse(res[0].values), {header: true} ).data;
+        var parse = function (res) {
+          return Papa.parse(Papa.unparse(res[0].values), { header: true }).data;
+        }
+
+        var apiUrl = 'https://sheets.googleapis.com/v4/spreadsheets/'
+        var spreadsheetId = googleDocURL.indexOf('/d/') > 0
+          ? googleDocURL.split('/d/')[1].split('/')[0]
+          : googleDocURL
+
+        $.getJSON(
+          apiUrl + spreadsheetId + '?key=' + googleApiKey
+        ).then(function (data) {
+          var sheets = data.sheets.map(function (o) { return o.properties.title })
+
+          if (sheets.length === 0 || !sheets.includes('Options')) {
+            'Could not load data from the Google Sheet'
           }
 
-          var apiUrl = 'https://sheets.googleapis.com/v4/spreadsheets/'
-          var spreadsheetId = googleDocURL.indexOf('/d/') > 0
-            ? googleDocURL.split('/d/')[1].split('/')[0]
-            : googleDocURL
+          // First, read 3 sheets: Options, Points, and Polylines
+          $.when(
+            $.getJSON(apiUrl + spreadsheetId + '/values/Options?key=' + googleApiKey),
+            $.getJSON(apiUrl + spreadsheetId + '/values/Points?key=' + googleApiKey),
+            $.getJSON(apiUrl + spreadsheetId + '/values/Polylines?key=' + googleApiKey)
+          ).done(function (options, points, polylines) {
 
-          $.getJSON(
-            apiUrl + spreadsheetId + '?key=' + googleApiKey
-          ).then(function(data) {
-              var sheets = data.sheets.map(function(o) { return o.properties.title })
+            // Which sheet names contain polygon data?
+            var polygonSheets = sheets.filter(function (name) { return name.indexOf('Polygons') === 0 })
 
-              if (sheets.length === 0 || !sheets.includes('Options')) {
-                'Could not load data from the Google Sheet'
+            // Define a recursive function to fetch data from a polygon sheet
+            var fetchPolygonsSheet = function (polygonSheets) {
+
+              // Load map once all polygon sheets have been loaded (if any)
+              if (polygonSheets.length === 0) {
+                onMapDataLoad(
+                  parse(options),
+                  parse(points),
+                  parse(polylines)
+                )
+              } else {
+
+                // Fetch another polygons sheet
+                $.getJSON(apiUrl + spreadsheetId + '/values/' + polygonSheets.shift() + '?key=' + googleApiKey, function (data) {
+                  createPolygonSettings(parse([data]))
+                  fetchPolygonsSheet(polygonSheets)
+                })
+
               }
 
-              // First, read 3 sheets: Options, Points, and Polylines
-              $.when(
-                $.getJSON(apiUrl + spreadsheetId + '/values/Options?key=' + googleApiKey),
-                $.getJSON(apiUrl + spreadsheetId + '/values/Points?key=' + googleApiKey),
-                $.getJSON(apiUrl + spreadsheetId + '/values/Polylines?key=' + googleApiKey)
-              ).done(function(options, points, polylines) {
-
-                // Which sheet names contain polygon data?
-                var polygonSheets = sheets.filter(function(name) { return name.indexOf('Polygons') === 0})
-
-                // Define a recursive function to fetch data from a polygon sheet
-                var fetchPolygonsSheet = function(polygonSheets) {
-
-                  // Load map once all polygon sheets have been loaded (if any)
-                  if (polygonSheets.length === 0) {
-                    onMapDataLoad(
-                      parse(options),
-                      parse(points),
-                      parse(polylines)
-                    )
-                  } else {
-                    
-                    // Fetch another polygons sheet
-                    $.getJSON(apiUrl + spreadsheetId + '/values/' + polygonSheets.shift() + '?key=' + googleApiKey, function(data) {
-                      createPolygonSettings( parse([data]) )
-                      fetchPolygonsSheet(polygonSheets)
-                    })
-
-                  }
-
-                }
-
-                // Start recursive function
-                fetchPolygonsSheet( polygonSheets )
-
-              })
-              
             }
-          )
 
-         } else {
-          alert('You load data from a Google Sheet, you need to add a free Google API key')
-         }
+            // Start recursive function
+            fetchPolygonsSheet(polygonSheets)
 
-       },
+          })
 
-       /*
-       Loading data from CSV files.
-       */
-       success: function() {
-
-        var parse = function(s) {
-          return Papa.parse(s[0], {header: true}).data
         }
-      
-        $.when(
-          $.get('./csv/Options.csv'),
-          $.get('./csv/Points.csv'),
-          $.get('./csv/Polylines.csv')
-        ).done(function(options, points, polylines) {
-      
-          function loadPolygonCsv(n) {
-      
-            $.get('./csv/Polygons' + (n === 0 ? '' : n) + '.csv', function(data) {
-              createPolygonSettings( parse([data]) )
-              loadPolygonCsv(n+1)
-            }).fail(function() { 
-              // No more sheets to load, initialize the map  
-              onMapDataLoad( parse(options), parse(points), parse(polylines) )
-            })
-      
-          }
-      
-          loadPolygonCsv(0)
-      
-        })
+        )
 
-       }
-   });
+      } else {
+        alert('You load data from a Google Sheet, you need to add a free Google API key')
+      }
+
+    },
+
+    /*
+    Loading data from CSV files.
+    */
+    success: function () {
+
+      var parse = function (s) {
+        return Papa.parse(s[0], { header: true }).data
+      }
+
+      $.when(
+        $.get('./csv/Options.csv'),
+        $.get('./csv/Points.csv'),
+        $.get('./csv/Polylines.csv')
+      ).done(function (options, points, polylines) {
+
+        function loadPolygonCsv(n) {
+
+          $.get('./csv/Polygons' + (n === 0 ? '' : n) + '.csv', function (data) {
+            createPolygonSettings(parse([data]))
+            loadPolygonCsv(n + 1)
+          }).fail(function () {
+            // No more sheets to load, initialize the map  
+            onMapDataLoad(parse(options), parse(points), parse(polylines))
+          })
+
+        }
+
+        loadPolygonCsv(0)
+
+      })
+
+    }
+  });
 
   /**
    * Reformulates documentSettings as a dictionary, e.g.
@@ -1121,10 +1123,10 @@ $(window).on('load', function() {
   // Returns a string that contains digits of val split by comma evey 3 positions
   // Example: 12345678 -> "12,345,678"
   function comma(val) {
-      while (/(\d+)(\d{3})/.test(val.toString())) {
-          val = val.toString().replace(/(\d+)(\d{3})/, '$1' + ',' + '$2');
-      }
-      return val;
+    while (/(\d+)(\d{3})/.test(val.toString())) {
+      val = val.toString().replace(/(\d+)(\d{3})/, '$1' + ',' + '$2');
+    }
+    return val;
   }
 
 });
