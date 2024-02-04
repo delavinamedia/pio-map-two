@@ -70,6 +70,8 @@ h6 {
 
 .leaflet-popup-content-wrapper .leaflet-popup-content p {
   margin: 6px 0px 6px 0px;
+  padding-left: 12px;
+
 }
 
 .leaflet-popup-content-wrapper .leaflet-popup-content a {
@@ -77,6 +79,7 @@ h6 {
   font-weight: bold;
   text-decoration: none;
   color: #326f90;
+  padding-left: 12px;
 }
 
 .leaflet-popup-content-wrapper .leaflet-popup-content a:hover {
@@ -137,6 +140,7 @@ form {
 .leaflet-popup-content img {
   width:50%; /* 100% */
   margin: 5px 0 5px 0;
+  padding: 0 5px 0 5px;
 }
 
 .geojson-point-marker {
